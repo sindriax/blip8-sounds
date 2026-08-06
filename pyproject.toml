@@ -1,0 +1,6 @@
+[project]
+name = "blip8-sounds"
+version = "1.0.0"
+description = "Generator for the blip8 sounds: 150+ CC0 chiptune sounds, every one made from code."
+requires-python = ">=3.12"
+dependencies = ["blip8>=0.1.0"]
