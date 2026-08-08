@@ -6,6 +6,7 @@ pack/
 
 # Generated sizes; originals in brand/ are the source of truth.
 brand/final/
+brand/web/
 
 .venv/
 __pycache__/
