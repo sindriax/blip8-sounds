@@ -4,3 +4,31 @@ version = "1.0.0"
 description = "Generator for the blip8 sounds: 150+ CC0 chiptune sounds, every one made from code."
 requires-python = ">=3.12"
 dependencies = ["blip8>=0.1.0"]
+license = "MIT"
+authors = [{ name = "sindriax" }]
+
+[dependency-groups]
+dev = [
+    "mypy>=2.3.0",
+    "pillow>=12.3.0",
+    "pytest>=9.1.1",
+    "ruff>=0.16.1",
+]
+
+[tool.ruff]
+line-length = 100
+extend-exclude = ["*.md"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+
+[[tool.mypy.overrides]]
+module = "generate"
+# generate.py builds every sound at import time, which mypy cannot follow into
+# numpy's dtypes without annotating each of 181 expressions.
+disallow_any_expr = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
