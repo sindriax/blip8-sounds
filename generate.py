@@ -59,7 +59,7 @@ def trim(samples: np.ndarray, fade: float = 0.006) -> np.ndarray:
         return samples
     cut = samples[: loud[-1] + 1].copy()
     ramp = min(int(fade * SAMPLE_RATE), len(cut))
-    cut[len(cut) - ramp:] *= np.linspace(1.0, 0.0, ramp)
+    cut[len(cut) - ramp :] *= np.linspace(1.0, 0.0, ramp)
     return cut
 
 
@@ -73,8 +73,13 @@ for label, freq in [("low", 440), ("mid", 660), ("high", 880), ("higher", 1175),
             envelope(square(freq=freq, length=length, volume=0.4), attack=0.001, release=0.02),
         )
 
-for label, (a, b) in [("soft", (523, 784)), ("bright", (660, 990)), ("high", (880, 1319)),
-                      ("wide", (523, 1047)), ("subtle", (587, 698))]:
+for label, (a, b) in [
+    ("soft", (523, 784)),
+    ("bright", (660, 990)),
+    ("high", (880, 1319)),
+    ("wide", (523, 1047)),
+    ("subtle", (587, 698)),
+]:
     add(
         f"ui/confirm_{label}.wav",
         f"two rising blips at {a} and {b} Hz",
@@ -96,15 +101,21 @@ for i, freq in enumerate([110, 147, 196], 1):
     add(
         f"ui/error_{i}.wav",
         f"envelope(square(freq={freq}, length=0.18, duty=0.125, volume=0.45), release=0.05)",
-        envelope(square(freq=freq, length=0.18, duty=0.125, volume=0.45), attack=0.001, release=0.05),
+        envelope(
+            square(freq=freq, length=0.18, duty=0.125, volume=0.45), attack=0.001, release=0.05
+        ),
     )
     add(
         f"ui/error_double_{i}.wav",
         f"the same buzz at {freq} Hz, twice",
         sequence(
-            envelope(square(freq=freq, length=0.08, duty=0.125, volume=0.45), attack=0.001, release=0.02),
+            envelope(
+                square(freq=freq, length=0.08, duty=0.125, volume=0.45), attack=0.001, release=0.02
+            ),
             silence(0.04),
-            envelope(square(freq=freq, length=0.12, duty=0.125, volume=0.45), attack=0.001, release=0.04),
+            envelope(
+                square(freq=freq, length=0.12, duty=0.125, volume=0.45), attack=0.001, release=0.04
+            ),
         ),
     )
 
@@ -122,8 +133,14 @@ for i, (start, end) in enumerate([(440, 880), (523, 1047), (660, 1319)], 1):
 
 # ---------------------------------------------------------------- pickups
 
-for label, (a, b) in [("classic", (988, 1319)), ("low", (784, 1047)), ("high", (1175, 1568)),
-                      ("tiny", (1319, 1760)), ("fat", (659, 880)), ("fifth", (880, 1319))]:
+for label, (a, b) in [
+    ("classic", (988, 1319)),
+    ("low", (784, 1047)),
+    ("high", (1175, 1568)),
+    ("tiny", (1319, 1760)),
+    ("fat", (659, 880)),
+    ("fifth", (880, 1319)),
+]:
     add(
         f"pickups/coin_{label}.wav",
         f"short note {a} Hz into a longer one at {b} Hz",
@@ -133,101 +150,165 @@ for label, (a, b) in [("classic", (988, 1319)), ("low", (784, 1047)), ("high", (
         ),
     )
 
-for label, notes in [("major", "C5 E5 G5 C6"), ("minor", "C5 Eb5 G5 C6"),
-                     ("sus", "C5 F5 G5 C6"), ("octaves", "C5 C6 C5 C6")]:
+for label, notes in [
+    ("major", "C5 E5 G5 C6"),
+    ("minor", "C5 Eb5 G5 C6"),
+    ("sus", "C5 F5 G5 C6"),
+    ("octaves", "C5 C6 C5 C6"),
+]:
     for tag, ln in [("fast", 0.045), ("slow", 0.07)]:
         add(
             f"pickups/powerup_{label}_{tag}.wav",
             f'four rising blips: "{notes}", {ln}s each',
-            sequence(*[
-                envelope(square(freq=note(n), length=ln, volume=0.4), attack=0.001, release=0.015)
-                for n in notes.split()
-            ]),
+            sequence(
+                *[
+                    envelope(
+                        square(freq=note(n), length=ln, volume=0.4), attack=0.001, release=0.015
+                    )
+                    for n in notes.split()
+                ]
+            ),
         )
 
 for i, freq in enumerate([1047, 1319, 1568], 1):
     add(
         f"pickups/gem_{i}.wav",
         f"bell wavetable at {freq} Hz, quick fade",
-        envelope(wavetable(BELL_TABLE, freq=freq, length=0.35, volume=0.4),
-                 attack=0.002, decay=0.35, sustain=0.0, release=0.0),
+        envelope(
+            wavetable(BELL_TABLE, freq=freq, length=0.35, volume=0.4),
+            attack=0.002,
+            decay=0.35,
+            sustain=0.0,
+            release=0.0,
+        ),
     )
 
 # ---------------------------------------------------------------- player
 
-for label, (start, end) in [("short", (400, 800)), ("classic", (400, 900)),
-                            ("high", (500, 1100)), ("floaty", (300, 700))]:
+for label, (start, end) in [
+    ("short", (400, 800)),
+    ("classic", (400, 900)),
+    ("high", (500, 1100)),
+    ("floaty", (300, 700)),
+]:
     add(
         f"player/jump_{label}.wav",
         f"square glide {start} to {end} Hz, duty 0.125",
-        envelope(square(freq=(start, end), length=0.13, duty=0.125, volume=0.4),
-                 attack=0.001, release=0.03),
+        envelope(
+            square(freq=(start, end), length=0.13, duty=0.125, volume=0.4),
+            attack=0.001,
+            release=0.03,
+        ),
     )
 
 for i, (start, end) in enumerate([(300, 120), (400, 150), (250, 90)], 1):
     add(
         f"player/land_{i}.wav",
         f"triangle drop {start} to {end} Hz",
-        envelope(triangle(freq=(start, end), length=0.1, volume=0.45),
-                 attack=0.001, release=0.03),
+        envelope(triangle(freq=(start, end), length=0.1, volume=0.45), attack=0.001, release=0.03),
     )
 
-for label, (start, end, ln) in [("quick", (440, 110, 0.18)), ("hard", (523, 98, 0.22)),
-                                ("long", (392, 82, 0.3))]:
+for label, (start, end, ln) in [
+    ("quick", (440, 110, 0.18)),
+    ("hard", (523, 98, 0.22)),
+    ("long", (392, 82, 0.3)),
+]:
     add(
         f"player/hurt_{label}.wav",
         f"harsh square fall {start} to {end} Hz, duty 0.125",
-        envelope(square(freq=(start, end), length=ln, duty=0.125, volume=0.45),
-                 attack=0.001, release=0.06),
+        envelope(
+            square(freq=(start, end), length=ln, duty=0.125, volume=0.45),
+            attack=0.001,
+            release=0.06,
+        ),
     )
 
 for i, (start, end) in enumerate([(200, 600), (300, 900)], 1):
     add(
         f"player/dash_{i}.wav",
         f"noise burst with a square swoosh {start} to {end} Hz",
-        envelope(square(freq=(start, end), length=0.15, duty=0.25, volume=0.3), attack=0.002, release=0.05)
-        + envelope(noise(length=0.15, volume=0.2, seed=7), attack=0.002, decay=0.15, sustain=0.0, release=0.0),
+        envelope(
+            square(freq=(start, end), length=0.15, duty=0.25, volume=0.3),
+            attack=0.002,
+            release=0.05,
+        )
+        + envelope(
+            noise(length=0.15, volume=0.2, seed=7),
+            attack=0.002,
+            decay=0.15,
+            sustain=0.0,
+            release=0.0,
+        ),
     )
 
 add(
     "player/death.wav",
     "long fall through two octaves, then a thud",
     sequence(
-        envelope(square(freq=(660, 82), length=0.5, duty=0.25, volume=0.4), attack=0.001, release=0.1),
-        envelope(triangle(freq=(120, 40), length=0.25, volume=0.5),
-                 attack=0.001, decay=0.25, sustain=0.0, release=0.0),
+        envelope(
+            square(freq=(660, 82), length=0.5, duty=0.25, volume=0.4), attack=0.001, release=0.1
+        ),
+        envelope(
+            triangle(freq=(120, 40), length=0.25, volume=0.5),
+            attack=0.001,
+            decay=0.25,
+            sustain=0.0,
+            release=0.0,
+        ),
     ),
 )
 
 # ---------------------------------------------------------------- weapons
 
-for label, (start, end, duty) in [("zap", (1800, 200, 0.25)), ("thin", (1600, 300, 0.125)),
-                                  ("heavy", (900, 100, 0.5)), ("fast", (2200, 400, 0.25)),
-                                  ("pew", (1400, 500, 0.125))]:
+for label, (start, end, duty) in [
+    ("zap", (1800, 200, 0.25)),
+    ("thin", (1600, 300, 0.125)),
+    ("heavy", (900, 100, 0.5)),
+    ("fast", (2200, 400, 0.25)),
+    ("pew", (1400, 500, 0.125)),
+]:
     for tag, ln in [("short", 0.16), ("long", 0.28)]:
         add(
             f"weapons/laser_{label}_{tag}.wav",
             f"square fall {start} to {end} Hz, duty {duty}, {ln}s",
-            envelope(square(freq=(start, end), length=ln, duty=duty, volume=0.45),
-                     attack=0.001, release=0.05),
+            envelope(
+                square(freq=(start, end), length=ln, duty=duty, volume=0.45),
+                attack=0.001,
+                release=0.05,
+            ),
         )
 
 for i, seed in enumerate([11, 23, 42], 1):
     add(
         f"weapons/shoot_noise_{i}.wav",
         f"short noise burst, seed {seed}",
-        envelope(noise(length=0.09, volume=0.4, seed=seed),
-                 attack=0.001, decay=0.09, sustain=0.0, release=0.0),
+        envelope(
+            noise(length=0.09, volume=0.4, seed=seed),
+            attack=0.001,
+            decay=0.09,
+            sustain=0.0,
+            release=0.0,
+        ),
     )
 
 # ---------------------------------------------------------------- explosions
 
-for label, (ln, thump_start, seed) in [("small", (0.4, 100, 3)), ("mid", (0.7, 130, 5)),
-                                       ("big", (1.0, 150, 8)), ("huge", (1.4, 170, 13))]:
-    debris = envelope(noise(length=ln, volume=0.35, seed=seed),
-                      attack=0.001, decay=ln, sustain=0.0, release=0.0)
-    thump = envelope(triangle(freq=(thump_start, 30), length=ln, volume=0.3),
-                     attack=0.001, decay=ln * 0.6, sustain=0.0, release=0.0)
+for label, (ln, thump_start, seed) in [
+    ("small", (0.4, 100, 3)),
+    ("mid", (0.7, 130, 5)),
+    ("big", (1.0, 150, 8)),
+    ("huge", (1.4, 170, 13)),
+]:
+    debris = envelope(
+        noise(length=ln, volume=0.35, seed=seed), attack=0.001, decay=ln, sustain=0.0, release=0.0
+    )
+    thump = envelope(
+        triangle(freq=(thump_start, 30), length=ln, volume=0.3),
+        attack=0.001,
+        decay=ln * 0.6,
+        sustain=0.0,
+        release=0.0,
+    )
     add(
         f"explosions/explosion_{label}.wav",
         f"noise ({ln}s, seed {seed}) over a triangle thump from {thump_start} Hz",
@@ -245,59 +326,106 @@ for label, (start, end) in [("soft", (100, 45)), ("classic", (120, 40)), ("hard"
     add(
         f"drums/kick_{label}.wav",
         f"triangle drop {start} to {end} Hz",
-        envelope(triangle(freq=(start, end), length=0.25, volume=0.5),
-                 attack=0.001, decay=0.25, sustain=0.0, release=0.0),
+        envelope(
+            triangle(freq=(start, end), length=0.25, volume=0.5),
+            attack=0.001,
+            decay=0.25,
+            sustain=0.0,
+            release=0.0,
+        ),
     )
 
 for i, seed in enumerate([2, 9, 17, 31], 1):
-    body = envelope(noise(length=0.15, volume=0.35, seed=seed),
-                    attack=0.001, decay=0.15, sustain=0.0, release=0.0)
-    tone = envelope(triangle(freq=180, length=0.15, volume=0.15),
-                    attack=0.001, decay=0.08, sustain=0.0, release=0.0)
+    body = envelope(
+        noise(length=0.15, volume=0.35, seed=seed),
+        attack=0.001,
+        decay=0.15,
+        sustain=0.0,
+        release=0.0,
+    )
+    tone = envelope(
+        triangle(freq=180, length=0.15, volume=0.15),
+        attack=0.001,
+        decay=0.08,
+        sustain=0.0,
+        release=0.0,
+    )
     add(f"drums/snare_{i}.wav", f"noise (seed {seed}) with a 180 Hz triangle under it", body + tone)
 
 for label, ln in [("closed", 0.03), ("mid", 0.05), ("open", 0.09)]:
     add(
         f"drums/hat_{label}.wav",
         f"a {ln}s tick of noise",
-        envelope(noise(length=ln, volume=0.3, seed=4),
-                 attack=0.001, decay=ln, sustain=0.0, release=0.0),
+        envelope(
+            noise(length=ln, volume=0.3, seed=4), attack=0.001, decay=ln, sustain=0.0, release=0.0
+        ),
     )
 
 for label, ln in [("short", 0.8), ("long", 1.5)]:
     add(
         f"drums/crash_{label}.wav",
         f"noise fading over {ln}s",
-        envelope(noise(length=ln, volume=0.35, seed=6),
-                 attack=0.001, decay=ln, sustain=0.0, release=0.0),
+        envelope(
+            noise(length=ln, volume=0.35, seed=6), attack=0.001, decay=ln, sustain=0.0, release=0.0
+        ),
     )
 
 for label, freq in [("high", 220), ("mid", 165), ("low", 110)]:
     add(
         f"drums/tom_{label}.wav",
         f"triangle drop from {freq} Hz",
-        envelope(triangle(freq=(freq, freq * 0.55), length=0.2, volume=0.45),
-                 attack=0.001, decay=0.2, sustain=0.0, release=0.0),
+        envelope(
+            triangle(freq=(freq, freq * 0.55), length=0.2, volume=0.45),
+            attack=0.001,
+            decay=0.2,
+            sustain=0.0,
+            release=0.0,
+        ),
     )
 
 # ---------------------------------------------------------------- jingles
 
 add("jingles/win_short.wav", 'melody("C5 E5 G5 C6", bpm=200)', melody("C5 E5 G5 C6", bpm=200))
-add("jingles/win_long.wav", 'melody("C5 E5 G5 C6 . G5 C6 .", bpm=180)',
-    melody("C5 E5 G5 C6 . G5 C6 .", bpm=180))
+add(
+    "jingles/win_long.wav",
+    'melody("C5 E5 G5 C6 . G5 C6 .", bpm=180)',
+    melody("C5 E5 G5 C6 . G5 C6 .", bpm=180),
+)
 add("jingles/lose_short.wav", 'melody("E4 Eb4 D4 Db4", bpm=140)', melody("E4 Eb4 D4 Db4", bpm=140))
-add("jingles/lose_long.wav", 'melody("G4 . Gb4 . F4 . E4 . .", bpm=150, voice=triangle)',
-    melody("G4 . Gb4 . F4 . E4 . .", bpm=150, voice=triangle))
-add("jingles/level_up.wav", 'arpeggio("C5 E5 G5", 0.4) into a held C6',
-    sequence(arpeggio("C5 E5 G5", length=0.4, rate=0.03),
-         envelope(square(freq=note("C6"), length=0.4, volume=0.4), attack=0.005, release=0.25)))
-add("jingles/game_over.wav", 'melody("C4 - G3 - E3 - C3 . .", bpm=120, voice=triangle)',
-    melody("C4 - G3 - E3 - C3 . .", bpm=120, voice=triangle))
-add("jingles/fanfare.wav", 'melody("G4 G4 G4 C5 . . E5 . C5 . E5 . G5 . . .", bpm=240)',
-    melody("G4 G4 G4 C5 . . E5 . C5 . E5 . G5 . . .", bpm=240))
-add("jingles/checkpoint.wav", "sine chime at 1047 Hz with a long fade",
-    envelope(wavetable(SINE_TABLE, freq=1047, length=1.0, volume=0.4),
-             attack=0.005, decay=1.0, sustain=0.0, release=0.0))
+add(
+    "jingles/lose_long.wav",
+    'melody("G4 . Gb4 . F4 . E4 . .", bpm=150, voice=triangle)',
+    melody("G4 . Gb4 . F4 . E4 . .", bpm=150, voice=triangle),
+)
+add(
+    "jingles/level_up.wav",
+    'arpeggio("C5 E5 G5", 0.4) into a held C6',
+    sequence(
+        arpeggio("C5 E5 G5", length=0.4, rate=0.03),
+        envelope(square(freq=note("C6"), length=0.4, volume=0.4), attack=0.005, release=0.25),
+    ),
+)
+add(
+    "jingles/game_over.wav",
+    'melody("C4 - G3 - E3 - C3 . .", bpm=120, voice=triangle)',
+    melody("C4 - G3 - E3 - C3 . .", bpm=120, voice=triangle),
+)
+add(
+    "jingles/fanfare.wav",
+    'melody("G4 G4 G4 C5 . . E5 . C5 . E5 . G5 . . .", bpm=240)',
+    melody("G4 G4 G4 C5 . . E5 . C5 . E5 . G5 . . .", bpm=240),
+)
+add(
+    "jingles/checkpoint.wav",
+    "sine chime at 1047 Hz with a long fade",
+    envelope(
+        wavetable(SINE_TABLE, freq=1047, length=1.0, volume=0.4),
+        attack=0.005,
+        decay=1.0,
+        sustain=0.0,
+        release=0.0,
+    ),
+)
 
 # ---------------------------------------------------------------- alerts
 
@@ -306,10 +434,20 @@ for i, (a, b) in enumerate([(660, 880), (523, 698), (784, 1047)], 1):
         f"alerts/notify_{i}.wav",
         f"two soft bell notes at {a} and {b} Hz",
         sequence(
-            envelope(wavetable(BELL_TABLE, freq=a, length=0.15, volume=0.35),
-                     attack=0.002, decay=0.15, sustain=0.0, release=0.0),
-            envelope(wavetable(BELL_TABLE, freq=b, length=0.4, volume=0.35),
-                     attack=0.002, decay=0.4, sustain=0.0, release=0.0),
+            envelope(
+                wavetable(BELL_TABLE, freq=a, length=0.15, volume=0.35),
+                attack=0.002,
+                decay=0.15,
+                sustain=0.0,
+                release=0.0,
+            ),
+            envelope(
+                wavetable(BELL_TABLE, freq=b, length=0.4, volume=0.35),
+                attack=0.002,
+                decay=0.4,
+                sustain=0.0,
+                release=0.0,
+            ),
         ),
     )
 
@@ -325,10 +463,16 @@ for label, (lo, hi) in [("slow", (440, 660)), ("fast", (523, 784))]:
         envelope(sequence(*parts), attack=0.01, release=0.1),
     )
 
-add("alerts/countdown_tick.wav", "550 Hz blip",
-    envelope(square(freq=550, length=0.06, volume=0.4), attack=0.001, release=0.02))
-add("alerts/countdown_go.wav", "1100 Hz long blip",
-    envelope(square(freq=1100, length=0.35, volume=0.45), attack=0.001, release=0.15))
+add(
+    "alerts/countdown_tick.wav",
+    "550 Hz blip",
+    envelope(square(freq=550, length=0.06, volume=0.4), attack=0.001, release=0.02),
+)
+add(
+    "alerts/countdown_go.wav",
+    "1100 Hz long blip",
+    envelope(square(freq=1100, length=0.35, volume=0.45), attack=0.001, release=0.15),
+)
 
 # ---------------------------------------------------------------- footsteps
 
@@ -342,21 +486,21 @@ STEP_SURFACES = [
     ("snow", 0.08, 70, 0.18),
 ]
 
-for label, ln, thump, vol in STEP_SURFACES:
+for label, ln, step_freq, vol in STEP_SURFACES:
     for i, seed in enumerate([21, 34], 1):
         add(
             f"footsteps/step_{label}_{i}.wav",
-            f"a {ln}s noise tick (seed {seed}) over a triangle at {thump} Hz",
+            f"a {ln}s noise tick (seed {seed}) over a triangle at {step_freq} Hz",
             hit(noise(length=ln, volume=vol, seed=seed), ln)
-            + hit(triangle(freq=(thump, thump * 0.6), length=ln, volume=0.18), ln),
+            + hit(triangle(freq=(step_freq, step_freq * 0.6), length=ln, volume=0.18), ln),
         )
 
-for label, ln, thump, vol in STEP_SURFACES[:3]:
+for label, ln, step_freq, vol in STEP_SURFACES[:3]:
     steps = []
     for seed in [21, 34, 45, 56]:
         steps.append(
             hit(noise(length=ln, volume=vol, seed=seed), ln)
-            + hit(triangle(freq=(thump, thump * 0.6), length=ln, volume=0.18), ln)
+            + hit(triangle(freq=(step_freq, step_freq * 0.6), length=ln, volume=0.18), ln)
         )
         steps.append(silence(0.11))
     add(f"footsteps/run_{label}.wav", f"four {label} steps, 0.11s apart", sequence(*steps))
@@ -403,8 +547,9 @@ add(
     "doors/open_creak.wav",
     "thin square rising 180 to 320 Hz with noise grit over it",
     layer(
-        envelope(square(freq=(180, 320), length=0.4, duty=0.125, volume=0.25),
-                 attack=0.02, release=0.08),
+        envelope(
+            square(freq=(180, 320), length=0.4, duty=0.125, volume=0.25), attack=0.02, release=0.08
+        ),
         envelope(noise(length=0.4, volume=0.1, seed=37), attack=0.05, release=0.15),
     ),
 )
@@ -413,8 +558,11 @@ add(
     "the same creak falling 320 to 180 Hz, ending in a thunk",
     sequence(
         layer(
-            envelope(square(freq=(320, 180), length=0.3, duty=0.125, volume=0.25),
-                     attack=0.02, release=0.06),
+            envelope(
+                square(freq=(320, 180), length=0.3, duty=0.125, volume=0.25),
+                attack=0.02,
+                release=0.06,
+            ),
             envelope(noise(length=0.3, volume=0.1, seed=37), attack=0.05, release=0.1),
         ),
         hit(triangle(freq=(140, 45), length=0.18, volume=0.45), 0.18),
@@ -451,7 +599,9 @@ add(
     "doors/gate_heavy.wav",
     "a long low grind: 60 Hz square under a slow noise bed",
     layer(
-        envelope(square(freq=(60, 55), length=0.9, duty=0.5, volume=0.25), attack=0.05, release=0.2),
+        envelope(
+            square(freq=(60, 55), length=0.9, duty=0.5, volume=0.25), attack=0.05, release=0.2
+        ),
         envelope(noise(length=0.9, volume=0.12, seed=41), attack=0.1, release=0.3),
     ),
 )
@@ -462,8 +612,11 @@ for label, (start, end) in [("in", (200, 1800)), ("out", (1800, 200))]:
     add(
         f"teleport/teleport_{label}.wav",
         f"sine wavetable gliding {start} to {end} Hz over 0.5s",
-        envelope(wavetable(SINE_TABLE, freq=(start, end), length=0.5, volume=0.4),
-                 attack=0.01, release=0.15),
+        envelope(
+            wavetable(SINE_TABLE, freq=(start, end), length=0.5, volume=0.4),
+            attack=0.01,
+            release=0.15,
+        ),
     )
 
 for i, (lo, hi) in enumerate([(400, 1600), (300, 1200)], 1):
@@ -486,8 +639,13 @@ add(
     "teleport/phase_out.wav",
     "warble falling into silence, then crunch(bits=4)",
     crunch(
-        envelope(wavetable(SINE_TABLE, freq=(1400, 120), length=0.7, volume=0.4),
-                 attack=0.005, decay=0.7, sustain=0.0, release=0.0),
+        envelope(
+            wavetable(SINE_TABLE, freq=(1400, 120), length=0.7, volume=0.4),
+            attack=0.005,
+            decay=0.7,
+            sustain=0.0,
+            release=0.0,
+        ),
         bits=4,
     ),
 )
@@ -495,8 +653,9 @@ add(
 # ---------------------------------------------------------------- text
 
 for label, freq in [("low", 660), ("mid", 990), ("high", 1319)]:
-    tick = envelope(square(freq=freq, length=0.02, duty=0.25, volume=0.3),
-                    attack=0.001, release=0.008)
+    tick = envelope(
+        square(freq=freq, length=0.02, duty=0.25, volume=0.3), attack=0.001, release=0.008
+    )
     add(f"text/blip_{label}.wav", f"a 0.02s tick at {freq} Hz, quiet enough to repeat", tick)
     add(
         f"text/scroll_{label}.wav",
@@ -541,16 +700,21 @@ add(
 add(
     "engine/rev.wav",
     "square climbing 55 to 165 Hz over 0.8s",
-    envelope(square(freq=(55, 165), length=0.8, duty=0.125, volume=0.35),
-             attack=0.02, release=0.1),
+    envelope(square(freq=(55, 165), length=0.8, duty=0.125, volume=0.35), attack=0.02, release=0.1),
 )
 add(
     "engine/ufo_hum.wav",
     "sine wavetable wobbling 220 to 260 Hz and back, twice: loopable",
-    sequence(*[part for _ in range(2) for part in (
-        wavetable(SINE_TABLE, freq=(220, 260), length=0.25, volume=0.3),
-        wavetable(SINE_TABLE, freq=(260, 220), length=0.25, volume=0.3),
-    )]),
+    sequence(
+        *[
+            part
+            for _ in range(2)
+            for part in (
+                wavetable(SINE_TABLE, freq=(220, 260), length=0.25, volume=0.3),
+                wavetable(SINE_TABLE, freq=(260, 220), length=0.25, volume=0.3),
+            )
+        ]
+    ),
 )
 
 # ---------------------------------------------------------------- character
@@ -562,28 +726,33 @@ add(
     "character/charge_and_fire.wav",
     "a rising charge whine, then the shot falls out of it",
     sequence(
-        envelope(square(freq=(200, 1200), length=0.55, duty=0.125, volume=0.3),
-                 attack=0.15, release=0.02),
-        envelope(square(freq=(2000, 180), length=0.3, duty=0.25, volume=0.45),
-                 attack=0.001, release=0.06),
+        envelope(
+            square(freq=(200, 1200), length=0.55, duty=0.125, volume=0.3), attack=0.15, release=0.02
+        ),
+        envelope(
+            square(freq=(2000, 180), length=0.3, duty=0.25, volume=0.45), attack=0.001, release=0.06
+        ),
     ),
 )
 add(
     "character/shield_up.wav",
     'chord("C4 G4 C5") under a sweep rising into it',
     layer(
-        envelope(square(freq=(220, 523), length=0.35, duty=0.25, volume=0.25),
-                 attack=0.05, release=0.05),
+        envelope(
+            square(freq=(220, 523), length=0.35, duty=0.25, volume=0.25), attack=0.05, release=0.05
+        ),
         at(0.28, chord("C4 G4 C5", length=0.6, volume=0.14)),
     ),
 )
 add(
     "character/magic_sparkle.wav",
     "five bell notes started 0.06s apart with at(), all ringing together",
-    layer(*[
-        at(i * 0.06, hit(wavetable(BELL_TABLE, freq=freq, length=0.5, volume=0.22), 0.5))
-        for i, freq in enumerate([1047, 1319, 1568, 2093, 2637])
-    ]),
+    layer(
+        *[
+            at(i * 0.06, hit(wavetable(BELL_TABLE, freq=freq, length=0.5, volume=0.22), 0.5))
+            for i, freq in enumerate([1047, 1319, 1568, 2093, 2637])
+        ]
+    ),
 )
 add(
     "character/spell_cast.wav",
@@ -635,10 +804,15 @@ add(
     "everything sagging at once: square, triangle and pitch all falling, crunched",
     crunch(
         layer(
-            envelope(square(freq=(880, 60), length=0.9, duty=0.25, volume=0.3),
-                     attack=0.005, release=0.2),
-            at(0.1, envelope(triangle(freq=(440, 40), length=0.8, volume=0.25),
-                             attack=0.005, release=0.2)),
+            envelope(
+                square(freq=(880, 60), length=0.9, duty=0.25, volume=0.3), attack=0.005, release=0.2
+            ),
+            at(
+                0.1,
+                envelope(
+                    triangle(freq=(440, 40), length=0.8, volume=0.25), attack=0.005, release=0.2
+                ),
+            ),
         ),
         bits=4,
     ),
@@ -666,8 +840,7 @@ add(
         melody("C5 G5 C5 G5 C5 G5", bpm=340),
         # The held square needs its own envelope: a raw oscillator starts and
         # ends mid-cycle at full amplitude, which is an audible click.
-        envelope(square(freq=131, length=1.06, duty=0.125, volume=0.12),
-                 attack=0.01, release=0.05),
+        envelope(square(freq=131, length=1.06, duty=0.125, volume=0.12), attack=0.01, release=0.05),
     ),
 )
 
@@ -676,10 +849,16 @@ add(
 # A 4-bit crunched selection: the Game Boy only had 16 volume steps, and the
 # grit reads instantly as handheld.
 GB_PICKS = [
-    "ui/blip_mid_short.wav", "ui/confirm_bright.wav", "ui/cancel_bright.wav",
-    "pickups/coin_classic.wav", "pickups/powerup_major_fast.wav",
-    "player/jump_classic.wav", "player/hurt_quick.wav",
-    "weapons/laser_zap_short.wav", "drums/kick_classic.wav", "drums/snare_1.wav",
+    "ui/blip_mid_short.wav",
+    "ui/confirm_bright.wav",
+    "ui/cancel_bright.wav",
+    "pickups/coin_classic.wav",
+    "pickups/powerup_major_fast.wav",
+    "player/jump_classic.wav",
+    "player/hurt_quick.wav",
+    "weapons/laser_zap_short.wav",
+    "drums/kick_classic.wav",
+    "drums/snare_1.wav",
 ]
 # Resolved before the loop: add() appends to SOUNDS as it goes.
 for path, recipe, samples in [entry for entry in SOUNDS if entry[0] in GB_PICKS]:
@@ -709,6 +888,7 @@ DEMO_EXTRA = [
 
 
 # ---------------------------------------------------------------- render
+
 
 def counts() -> dict[str, int]:
     """Sounds per folder, in the order the folders were written."""
