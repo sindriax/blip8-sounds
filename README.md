@@ -8,11 +8,23 @@ Every file is arithmetic.
 uv run generate.py
 ```
 
+One file makes all 181, which is the point: every game I built used to start by
+rewriting the same throwaway sound script
+([the longer version](https://github.com/sindriax/blip8#why-i-made-this)). CI
+renders the whole pack on every push and fails if a sound clips, goes silent, or
+drops out of the manifest.
+
 Output lands in `pack/`, ready to zip: mono 16-bit wav at 44100 Hz, sorted into
 folders (`ui/`, `pickups/`, `player/`, `weapons/`, `explosions/`, `drums/`,
 `jingles/`, `alerts/`, `footsteps/`, `water/`, `doors/`, `teleport/`, `text/`,
 `engine/`, `character/`, `gameboy/`), plus a demo reel, a README, and the
 license.
+
+## the blip8 family
+
+- 🦇 [blip8](https://github.com/sindriax/blip8): the Python chiptune synthesis library. `pip install blip8`
+- 🧪 [blip8 lab](https://sindriax.itch.io/blip8-lab): make 8-bit sounds in your browser ([source](https://github.com/sindriax/blip8-lab))
+- 📦 [blip8 sounds](https://sindriax.itch.io/blip8-sounds): free CC0 chiptune SFX packs, generated from code ([source](https://github.com/sindriax/blip8-sounds))
 
 ## How it works
 
@@ -47,12 +59,6 @@ shaped with `envelope`, combined with `sequence`, `layer` and `at`.
 | `generate.py` | Every sound in the pack, and the render step. |
 | `brand/` | Cover art originals. `finalize.py` pads them to the sizes itch and GitHub want. |
 | `pack/` | Build output. Regenerated, not committed. |
-
-## the blip8 family
-
-- 🦇 [blip8](https://github.com/sindriax/blip8): the Python chiptune synthesis library. `pip install blip8`
-- 🧪 [blip8 lab](https://sindriax.itch.io/blip8-lab): make 8-bit sounds in your browser ([source](https://github.com/sindriax/blip8-lab))
-- 📦 [blip8 sounds](https://sindriax.itch.io/blip8-sounds): free CC0 chiptune SFX packs, generated from code ([source](https://github.com/sindriax/blip8-sounds))
 
 ## License
 
