@@ -22,6 +22,7 @@ license.
 
 ## the blip8 family
 
+- 🏠 [blip8.sindriax.dev](https://blip8.sindriax.dev): the front door, all three in one place
 - 🦇 [blip8](https://github.com/sindriax/blip8): the Python chiptune synthesis library. `pip install blip8`
 - 🧪 [blip8 lab](https://sindriax.itch.io/blip8-lab): make 8-bit sounds in your browser ([source](https://github.com/sindriax/blip8-lab))
 - 📦 [blip8 sounds](https://sindriax.itch.io/blip8-sounds): free CC0 chiptune SFX packs, generated from code ([source](https://github.com/sindriax/blip8-sounds))
@@ -57,7 +58,8 @@ shaped with `envelope`, combined with `sequence`, `layer` and `at`.
 | Path | |
 | --- | --- |
 | `generate.py` | Every sound in the pack, and the render step. |
-| `brand/` | Cover art originals. `finalize.py` pads them to the sizes itch and GitHub want. |
+| `brand/` | Cover art originals. `finalize.py` pads them to the sizes itch and GitHub want; `sprites.py` cuts the crops the lab and the hub use. |
+| `tests/` | The quality gate: nothing clipped, silent, or missing from the manifest. |
 | `pack/` | Build output. Regenerated, not committed. |
 
 ## License
